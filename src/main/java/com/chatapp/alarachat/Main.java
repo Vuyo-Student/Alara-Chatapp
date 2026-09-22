@@ -28,7 +28,7 @@ public class Main {
     public static void main(String[] args) {
 
         System.out.println("=========================================");
-        System.out.println("        WELCOME TO ALARA");
+        System.out.println("        WELCOME TO ALARA CHAT");
         System.out.println("=========================================");
 
         try {
