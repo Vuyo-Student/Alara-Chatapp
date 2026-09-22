@@ -1,0 +1,74 @@
+[
+  {
+    "messageId": "4600537397",
+    "messageNumber": 1,
+    "recipient": "0821234567",
+    "messageBody": "short",
+    "messageHash": "46:1:SHORTSHORT",
+    "status": "STORED"
+  },
+  {
+    "messageId": "8156498844",
+    "messageNumber": 2,
+    "recipient": "0821234567",
+    "messageBody": "the longest one here",
+    "messageHash": "81:2:THEHERE",
+    "status": "STORED"
+  },
+  {
+    "messageId": "2719631345",
+    "messageNumber": 5,
+    "recipient": "0897687900",
+    "messageBody": "Morning Sir hope you are well, I was wondering if is it still possible to subnit my assignment?",
+    "messageHash": "27:5:MORNINGASSIGNMENT?",
+    "status": "STORED"
+  },
+  {
+    "messageId": "6330135074",
+    "messageNumber": 6,
+    "recipient": "0899098789",
+    "messageBody": "Sho kau",
+    "messageHash": "63:6:SHOKAU",
+    "status": "STORED"
+  },
+  {
+    "messageId": "4815250912",
+    "messageNumber": 7,
+    "recipient": "0878909876",
+    "messageBody": "Hello my love",
+    "messageHash": "48:7:HELLOLOVE",
+    "status": "STORED"
+  },
+  {
+    "messageId": "2340678802",
+    "messageNumber": 8,
+    "recipient": "0789098769",
+    "messageBody": "Yo wassup mane",
+    "messageHash": "23:8:YOMANE",
+    "status": "STORED"
+  },
+  {
+    "messageId": "5492838280",
+    "messageNumber": 11,
+    "recipient": "0897890976",
+    "messageBody": "Ebaba where is my money i need it",
+    "messageHash": "54:11:EBABAIT",
+    "status": "STORED"
+  },
+  {
+    "messageId": "1332114852",
+    "messageNumber": 12,
+    "recipient": "0897859087",
+    "messageBody": "Hey babe when are u off so i can fetch you?",
+    "messageHash": "13:12:HEYYOU?",
+    "status": "STORED"
+  },
+  {
+    "messageId": "5012876542",
+    "messageNumber": 13,
+    "recipient": "0897890956",
+    "messageBody": "Hey sit is possible for me to get more hours in cloudlabs?",
+    "messageHash": "50:13:HEYCLOUDLABS?",
+    "status": "STORED"
+  }
+]
