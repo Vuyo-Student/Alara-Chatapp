@@ -1,18 +1,10 @@
 [
   {
-    "messageId": "4250926348",
+    "messageId": "0887256605",
     "messageNumber": 1,
     "recipient": "0821234567",
-    "messageBody": "short",
-    "messageHash": "42:1:SHORTSHORT",
-    "status": "STORED"
-  },
-  {
-    "messageId": "1310765987",
-    "messageNumber": 2,
-    "recipient": "0821234567",
-    "messageBody": "the longest one here",
-    "messageHash": "13:2:THEHERE",
+    "messageBody": "persist me",
+    "messageHash": "08:1:PERSISTME",
     "status": "STORED"
   }
 ]

@@ -11,30 +11,41 @@ package com.chatapp.service;
 
 import com.chatapp.model.Message;
 
+
 public interface MessageManager {
 
-    Message composeMessage(String recipient, String body);
-    String  validateRecipient(String recipient);
-    String  validateMessageBody(String body);
+    /**
+     * Validates a recipient cell number.
+     * Returns "Recipient accepted" or the exact error string from the brief.
+     */
+    String validateRecipient(String recipient);
 
-    void storeMessage(Message m);
+    /**
+     * Validates body length (max 250 characters).
+     * Returns "Message Sent" or "Please enter a message of less than 250 characters".
+     */
+    String validateMessageBody(String body);
+
+    /**
+     * Composes a new message:
+     *   - generates a 10-digit random ID,
+     *   - increments the message number,
+     *   - builds the message hash.
+     */
+    Message composeMessage(String recipient, String body);
+
+    /** Choice 1: "Send Message" — marks the message as SENT. */
     void sendMessage(Message m);
+
+    /** Choice 3: "Disregard Message" — marks the message as DISREGARDED. */
     void disregardMessage(Message m);
 
+    /** Choice 2: "Store Message" — marks the message as STORED and writes to JSON. */
+    void storeMessage(Message m);
+
+    /** Returns only the messages that were actually sent. */
     Message[] getSentMessages();
-    Message[] getStoredMessages();
-    Message[] getDisregardedMessages();
-    String[]  getMessageIds();
-    String[]  getMessageHashes();
 
-    String displayStoredSenderRecipient();
-    String findLongestStoredMessage();
-    Message searchByMessageId(String id);
-    Message[] searchByRecipient(String recipient);
-    boolean deleteByHash(String hash);
-    boolean disregardSentByHash(String hash);
-    String generateReport();
-
+    /** Writes all currently stored messages to the JSON file. */
     void saveStoredToJson();
-    void loadStoredFromJson();
 }

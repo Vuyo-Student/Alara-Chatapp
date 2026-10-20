@@ -11,121 +11,111 @@ package com.chatapp;
  */
 
 import com.chatapp.model.Message;
-import com.chatapp.service.impl.MessagerManagerImpl;
+import com.chatapp.service.impl.MessageManagerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class MessageManagerTest {
 
-    private MessagerManagerImpl mgr;
+    private MessageManagerImpl mgr;
 
+    /**
+     * Runs before every test.
+     * Uses a separate JSON file so tests never touch the production data
+     * or leave stale entries behind for the next test run.
+     */
     @BeforeEach
     public void setUp() {
-        mgr = new MessagerManagerImpl(10, "test_stored_messages.json");
+        mgr = new MessageManagerImpl(10, "test_stored_messages.json");
     }
 
-    @Test
-    @DisplayName("Compose populates ID and hash arrays")
-    public void composePopulatesArrays() {
-        mgr.composeMessage("0821234567", "hello world");
-        mgr.composeMessage("0821234567", "second message");
-        assertEquals(2, mgr.getMessageIds().length);
-        assertEquals(2, mgr.getMessageHashes().length);
-    }
+
 
     @Test
-    @DisplayName("Send stores in sent array and increments count")
+    @DisplayName("Compose generates a 10-digit ID and increments the number")
+    public void composeGeneratesIdAndNumber() {
+        Message m1 = mgr.composeMessage("0821234567", "hello world");
+        Message m2 = mgr.composeMessage("0821234567", "second message");
+
+        // ID is 10 characters long
+        assertEquals(10, m1.getMessageId().length());
+        // Message numbers auto-increment: 1, then 2
+        assertEquals(1,  m1.getMessageNumber());
+        assertEquals(2,  m2.getMessageNumber());
+    }
+
+
+
+    @Test
+    @DisplayName("Send sets status SENT and adds the message to the sent array")
     public void sendAndCount() {
         Message m = mgr.composeMessage("0821234567", "hi");
         mgr.sendMessage(m);
+
+        // One message in the sent array
         assertEquals(1, mgr.getSentMessages().length);
-        assertEquals("SENT", mgr.getSentMessages()[0].getStatus());
+        // Status was updated to SENT
+        assertEquals("SENT", m.getStatus());
     }
 
     @Test
-    @DisplayName("Disregard stores in disregarded array")
+    @DisplayName("Disregard sets status DISREGARDED")
     public void disregardAndCount() {
         Message m = mgr.composeMessage("0821234567", "hi");
         mgr.disregardMessage(m);
-        assertEquals(1, mgr.getDisregardedMessages().length);
+        assertEquals("DISREGARDED", m.getStatus());
     }
 
     @Test
-    @DisplayName("Store adds to stored array and JSON file is created")
-    public void storeAndPersist() {
+    @DisplayName("Store sets status STORED")
+    public void storeAndCount() {
         Message m = mgr.composeMessage("0821234567", "persist me");
         mgr.storeMessage(m);
-        assertEquals(1, mgr.getStoredMessages().length);
+        assertEquals("STORED", m.getStatus());
     }
 
-    @Test
-    @DisplayName("Longest stored message is returned")
-    public void longestStored() {
-        mgr.storeMessage(mgr.composeMessage("0821234567", "short"));
-        mgr.storeMessage(mgr.composeMessage("0821234567", "the longest one here"));
-        assertTrue(mgr.findLongestStoredMessage().contains("the longest one here"));
-    }
+
 
     @Test
-    @DisplayName("Search by ID finds the message")
-    public void searchById() {
-        Message m = mgr.composeMessage("0821234567", "search me");
-        mgr.storeMessage(m);
-        Message found = mgr.searchByMessageId(m.getMessageId());
-        assertNotNull(found);
-        assertEquals("search me", found.getMessageBody());
-    }
-
-    @Test
-    @DisplayName("Search by recipient returns all matching")
-    public void searchByRecipient() {
-        mgr.storeMessage(mgr.composeMessage("0821234567", "one"));
-        mgr.storeMessage(mgr.composeMessage("0821234567", "two"));
-        mgr.storeMessage(mgr.composeMessage("0827654321", "other"));
-        assertEquals(2, mgr.searchByRecipient("0821234567").length);
-    }
-
-    @Test
-    @DisplayName("Delete by hash removes message")
-    public void deleteByHash() {
-        Message m = mgr.composeMessage("0821234567", "delete me");
-        mgr.storeMessage(m);
-        assertTrue(mgr.deleteByHash(m.getMessageHash()));
-        assertEquals(0, mgr.getStoredMessages().length);
-    }
-
-    @Test
-    @DisplayName("Message body longer than 250 chars rejected")
+    @DisplayName("Message body over 250 chars is rejected")
     public void longBodyRejected() {
+        // Build a 251-character string (one over the limit)
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 251; i++) sb.append('a');
+
+        // The exact error string from the brief
         assertEquals("Please enter a message of less than 250 characters",
                      mgr.validateMessageBody(sb.toString()));
     }
 
     @Test
-    @DisplayName("Message body 250 chars or fewer accepted")
+    @DisplayName("Message body 250 chars or fewer is accepted")
     public void okBodyAccepted() {
         assertEquals("Message Sent", mgr.validateMessageBody("hello"));
     }
 
+
+
     @Test
-    @DisplayName("Recipient with SA code accepted")
+    @DisplayName("Recipient in SA format is accepted")
     public void recipientOk() {
+        // International format +27…
         assertEquals("Recipient accepted", mgr.validateRecipient("+27821234567"));
+        // National format 08…
         assertEquals("Recipient accepted", mgr.validateRecipient("0821234567"));
     }
 
     @Test
-    @DisplayName("Recipient without SA code rejected")
+    @DisplayName("Recipient outside SA format is rejected")
     public void recipientBad() {
+        // Too short
         assertEquals("Recipient number incorrectly formatted.",
                      mgr.validateRecipient("12345"));
+        // Non-SA international prefix
         assertEquals("Recipient number incorrectly formatted.",
                      mgr.validateRecipient("+15551234567"));
     }
