@@ -22,7 +22,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    // ---- Shared state (static = one instance for the whole app) ----
+    //Shared state (static = one instance for the whole app)
     private static final Scanner sc = new Scanner(System.in);
     private static final UserValidator validator = new UserValidator();
 
